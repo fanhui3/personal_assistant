@@ -1,0 +1,61 @@
+{
+    "intents": [
+        {
+            "tag": "greeting",
+            "patterns": [
+                "Hi",
+                "How are you",
+                "Is anyone there?",
+                "Hello",
+                "Good day",
+                "Whats up",
+                "Hey",
+                "greetings"
+            ],
+            "responses": "Hello!",
+            "context_set": ""
+        },
+        {
+            "tag": "personal_assistant_mode",
+            "patterns": [
+                "personal assistant mode",
+                "I need your help",
+                "help me with something",
+                "I need your assistance",
+                "can you help me?"
+            ],
+            "responses": "What can I do for you?",
+            "context_set": ""
+        },
+        {
+            "tag": "therapist_mode",
+            "patterns": [
+                "i need a therapist",
+                "therapist mode",
+                "be my therapist",
+                "I am not feeling well",
+                "something is troubling me",
+                "I am having trouble mentally",
+                "I am not feeling good mentally",
+                "something is bothering me",
+                "My brain is in a mess"
+            ],
+            "responses": "I think I can provide you with some therapist help",
+            "context_set": ""
+        },
+        {
+            "tag": "career_coach_mode",
+            "patterns": [
+                "I need help for work",
+                "I would like to do better at work",
+                "I want to be a better team playet at work",
+                "I want to be more professional",
+                "I want to be more productive?",
+                "I want to do better at my job or career",
+                "I want a promotion"
+            ],
+            "responses": "I think I can provide you with some career coach advise",
+            "context_set": ""
+        }
+    ]
+}
