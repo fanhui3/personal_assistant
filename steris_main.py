@@ -19,8 +19,8 @@ while True:
     #turning on
     Steris.dictation("Yes?")
 
-    # collect input #TODO add voice recogniser
-    message = input("Message: ")
+    # collect speak into mic and get transcript
+    message = Steris.audio_to_text()
 
     #terminate the program with a command
     if "stop" in message:

@@ -68,7 +68,8 @@ class Assistant:
             Steris.dictation(content)
 
             #file user follow up reply
-            query = input("Message: ") #TODO add speech rognition here
+            # query = input("Message: ") #TODO add speech rognition here
+            query = Steris.audio_to_text()
             message_history.append({"role":"user", "content":query})
             
             #terminate at keyword
