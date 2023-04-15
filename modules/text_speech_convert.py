@@ -6,6 +6,8 @@ import os
 import wave
 import time
 import speech_recognition as sr
+import audioop
+import numpy as np
 
 if not os.path.exists("./audio_output"):
     os.makedirs("./audio_output")
@@ -32,7 +34,7 @@ class TextToSpeech:
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
-        self.RECORD_SECONDS = 10
+        self.RECORD_SECONDS = 30
         self.p = pyaudio.PyAudio()
 
         #whisper's settings
@@ -73,9 +75,13 @@ class TextToSpeech:
 
         print("Recording audio...")
         time.sleep(1)
+        # start recording
         for i in range(0, int(self.RATE / self.CHUNK * self.RECORD_SECONDS)):
             data = stream.read(self.CHUNK)
             frames.append(data)
+            rms = audioop.rms(data, 2)  # calculate RMS energy level
+            if rms < 700:  # adjust this threshold as necessary
+                break  # stop recording if only ambience noise is left
         print("Recording complete.")
 
         stream.stop_stream()
