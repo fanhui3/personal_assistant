@@ -17,10 +17,10 @@ while True:
     #TODO add wake up sound and voice prompt
 
     #turning on
-    Steris.dictation("Yes?")
+    Steris.dictation("How can I help you?")
 
     # collect speak into mic and get transcript
-    message = Steris.audio_to_text()
+    message = Steris.audio_to_text(record_seconds=10, silent_duration=2)
 
     #terminate the program with a command
     if "stop" in message:

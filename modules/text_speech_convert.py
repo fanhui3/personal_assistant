@@ -53,14 +53,16 @@ class TextToSpeech:
         self.engine.say(text=body, name=name)
         self.engine.runAndWait()
 
-    def listen_and_record(self):
+    def listen_and_record(self, record_seconds=30, silent_duration=3):
 
-        #pyaudio's settings
+        # pyaudio's settings
         self.CHUNK = 1024
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
-        self.RECORD_SECONDS = 30
+        self.RECORD_SECONDS = record_seconds
+        self.SILENT_THRESHOLD = 4000
+        self.SILENT_CHUNKS = silent_duration * self.RATE // self.CHUNK
 
         # check if a stream is already active
         if hasattr(self, "stream") and self.stream.is_active():
@@ -78,18 +80,26 @@ class TextToSpeech:
         )
 
         frames = []
+        silent_chunks = 0
+        recording = True
 
-        print("Recording audio...")
-        # time.sleep(1)
+        print(f"Recording audio for {self.RECORD_SECONDS} seconds or until {self.SILENT_CHUNKS*self.CHUNK/self.RATE:.1f} seconds of silence...")
 
         # start recording
-        for i in range(0, int(self.RATE / self.CHUNK * self.RECORD_SECONDS)):
+        while recording:
             data = stream.read(self.CHUNK)
             frames.append(data)
             rms = audioop.rms(data, 2)  # calculate RMS energy level
-            if rms < 700:  # adjust this threshold as necessary
-                break  # stop recording if only ambience noise is left
-            print(f"Recording: {i+1}/{self.RECORD_SECONDS*self.RATE/self.CHUNK}")
+
+            if rms < self.SILENT_THRESHOLD:
+                silent_chunks += 1
+            else:
+                silent_chunks = 0
+
+            if silent_chunks >= self.SILENT_CHUNKS or len(frames) >= self.RECORD_SECONDS * self.RATE // self.CHUNK:
+                recording = False
+
+            # print(f"Recording: {len(frames)*self.CHUNK/self.RATE:.1f}/{self.RECORD_SECONDS}")
         print("Recording complete.")
 
         stream.stop_stream()
@@ -116,9 +126,9 @@ class TextToSpeech:
         except sr.RequestError as e:
             print("Could not request results from Google Speech Recognition service; {0}".format(e))
 
-    def audio_to_text(self):
+    def audio_to_text(self,record_seconds=30, silent_duration=3):
         while True:
-            self.listen_and_record()
+            self.listen_and_record(record_seconds=record_seconds, silent_duration=silent_duration)
             time.sleep(2)
             text = self.transcribe()
             if text == None:

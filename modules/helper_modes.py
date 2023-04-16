@@ -69,7 +69,7 @@ class Assistant:
 
             #file user follow up reply
             # query = input("Message: ") #TODO add speech rognition here
-            query = Steris.audio_to_text()
+            query = Steris.audio_to_text(record_seconds=60, silent_duration=3)
             message_history.append({"role":"user", "content":query})
             
             #terminate at keyword
