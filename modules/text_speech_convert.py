@@ -7,6 +7,9 @@ import time
 import speech_recognition as sr
 import audioop
 import numpy as np
+from key import ELEVANLABS_API_KEY
+from elevenlabslib import ElevenLabsUser
+
 
 if not os.path.exists("./audio_output"):
     os.makedirs("./audio_output")
@@ -34,6 +37,9 @@ class TextToSpeech:
         #file path
         self.file_path = os.path.join(os.getcwd(), "audio_output", "my_recording.wav")
 
+        self.eleven_user = ElevenLabsUser(ELEVANLABS_API_KEY)
+        self.eleven_voice = self.eleven_user.get_voices_by_name("Bella")[0]  # This is a list because multiple voices can have the same name
+
     def list_available_voices(self):
         voices: list = [self.engine.getProperty("voices")]
 
@@ -50,8 +56,11 @@ class TextToSpeech:
         self.engine.runAndWait()
 
     def dictation(self, body: str, name=None):
-        self.engine.say(text=body, name=name)
-        self.engine.runAndWait()
+        try:
+            self.eleven_voice.generate_and_play_audio(body, playInBackground=False)
+        except Exception as e:
+            self.engine.say(text=body, name=name)
+            self.engine.runAndWait()
 
     def listen_and_record(self, record_seconds=30, silent_duration=3):
 
@@ -166,5 +175,11 @@ Steris = TextToSpeech(
 
 
 if __name__ == "__main__":
-    text = Steris.audio_to_text()
+    # text = Steris.audio_to_text()
+    user = ElevenLabsUser(ELEVANLABS_API_KEY)
+    voice = user.get_voices_by_name("Bella")[0]  # This is a list because multiple voices can have the same name
+
+    voice.play_preview(playInBackground=False)
+
+    voice.generate_and_play_audio("Hello there.", playInBackground=False)
 

@@ -2,6 +2,7 @@ from neuralintents.main import GenericAssistant as GA
 from modules.text_speech_convert import Steris
 from modules.helper_modes import Assistant
 
+
 def hello():
     "Hello World!!!"
 
@@ -30,4 +31,6 @@ while True:
     #diver to the module if it understands
     steris.request(message)
 
-    #TODO add measures in case steris do not understand your intent
+    # TODO add measures in case steris do not understand your intent
+
+
